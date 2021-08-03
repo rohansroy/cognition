@@ -1,0 +1,72 @@
+[
+{
+  "model": "cognitive_skills.test",
+  "pk": 1,
+  "fields": {
+    "name": "Test 1 - Response Time #1 (Symbols) – Randomized",
+    "slug": "test-1-response-time-1-symbols-randomized",
+    "introduction": "This is a test designed to measure your response time. Let's try some examples. Please press the key you see on the screen.",
+    "description": "Good! , , , , are the only symbols you will see on this test. When ready, you are to press the key you see on the screen. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit “spacebar” when ready."
+  }
+},
+{
+  "model": "cognitive_skills.test",
+  "pk": 2,
+  "fields": {
+    "name": "Test 2 - Response Time #2 (Words) – Randomized",
+    "slug": "test-2-response-time-2-words-randomized",
+    "introduction": "This is a similar test designed to measure your response time. Let’s try some examples. Please press the key that corresponds to the word you see on the screen.",
+    "description": "Good! Up, Down, Left, Right are the only words you will see on this test. When ready, you are to press the key that corresponds to the word you see on the screen. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when ready."
+  }
+},
+{
+  "model": "cognitive_skills.test",
+  "pk": 3,
+  "fields": {
+    "name": "Test 3 - Response Time #3 (Symbols/Words) – Random",
+    "slug": "test-3-response-time-3-symbolswords-random",
+    "introduction": "This test is just like the two you just completed, but this time you will see both symbols and words. Let’s try some examples. Press the key or the key that corresponds to the word you see flash on the screen.",
+    "description": "Good! Up, Down, Left, Right and are the only words or symbols you will see on this test. When ready, you are to press the key or the key that corresponds to the word you see on the screen. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when ready."
+  }
+},
+{
+  "model": "cognitive_skills.test",
+  "pk": 4,
+  "fields": {
+    "name": "Test 4 - Inhibition/Opposite #1 (Symbols) – Random",
+    "slug": "test-4-inhibitionopposite-1-symbols-random",
+    "introduction": "This test is like the one you just finished, but slightly different. You are to press the opposite directional key than the one you see, ignoring the key that is on the screen. Let’s try some examples.",
+    "description": "“Good! , , , , are the only symbols you will see on this test. When ready, you are to press the opposite directional key than the one you see, ignoring the key that is on the screen. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when ready."
+  }
+},
+{
+  "model": "cognitive_skills.test",
+  "pk": 5,
+  "fields": {
+    "name": "Test 5 - Inhibition/Opposite #2 (Words) – Randomiz",
+    "slug": "test-5-inhibitionopposite-2-words-randomiz",
+    "introduction": "This test is like the one you just finished, but slightly different. You are to press the opposite directional key than the one you see flash on the screen, ignoring the key that is on the screen. Let’s do some examples:",
+    "description": "Good! Up, Down, Left, and Right are the only words you will see on this test. When ready, you are to press the opposite directional key that corresponds to the word you see flash on the screen. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when ready."
+  }
+},
+{
+  "model": "cognitive_skills.test",
+  "pk": 6,
+  "fields": {
+    "name": "Test 6 - Inhibition/Opposite (Symbols/Words) – Ran",
+    "slug": "test-6-inhibitionopposite-symbolswords-ran",
+    "introduction": "This test is just like the two you just completed, but this time you will see both symbols and words. You are to press the opposite directional key or key corresponding to a word than the one you see flash on the screen. Let’s do some examples.",
+    "description": "Good! Up, Down, Left, Right are the only words or symbols you will see on this test. When ready, you are to press the opposite directional key or key corresponding to a word than the one you see on the screen. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when ready."
+  }
+},
+{
+  "model": "cognitive_skills.test",
+  "pk": 7,
+  "fields": {
+    "name": "Test 7 - Inhibition/Switching (Symbols/Words)– Ran",
+    "slug": "test-7-inhibitionswitching-symbolswords-ran",
+    "introduction": "This time, for many of the trials, you should do the same thing you just did: Press the opposite directional symbol that is displayed. But if a symbol is inside a box, you should match the symbol exactly. Let’s practice.",
+    "description": "Good! Up, Down, Left, Right are the only words or symbols you will see on this test. When ready, you are to press the opposite directional key or key corresponding to a word or match the symbol/word exactly if it is in a box. Work as quickly as you can. You will have 60 seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when ready."
+  }
+}
+]
