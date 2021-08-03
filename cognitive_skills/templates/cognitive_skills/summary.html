@@ -1,0 +1,48 @@
+{% extends 'cognitive_skills/base.html' %}
+
+{% block user %}
+  {% if turk_id %}
+    Turk ID: {{ turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+  <h3>Results for {{ turk_id }}</h3>
+  <table class="table">
+      <thead>
+        <tr>
+            <th scope="col">Test</th>
+            <th scope="col">Correct</th>
+            <th scope="col">Total</th>
+            <th scope="col">%</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in results %}
+        <tr>
+          <td>{{ result.test.name }}</td>
+          <td>{{ result.correct }}</td>
+          <td>{{ result.total }}</td>
+          <td>{{ result.pctCorrect }}
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+{% endblock %}
+
+{% block nav %}
+<nav>
+  <h2>Available Tests</h2 >
+    <ul>
+      {% for test in available_tests %}
+        <li><a href="{% url 'cognitive_skills:test' test.slug %}">{{ test }}</a></li>
+      {% endfor %}
+    </ul>
+    <h2>Completed Tests</h2 >
+      <ul>
+        {% for test in completed_tests %}
+          <li><a href="{% url 'cognitive_skills:test' test.slug %}">{{ test }}</a></li>
+        {% endfor %}
+      </ul>
+</nav>
+{% endblock %}

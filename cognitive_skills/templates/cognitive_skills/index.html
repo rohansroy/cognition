@@ -1,0 +1,41 @@
+{% extends 'cognitive_skills/base.html' %}
+
+{% block user %}
+  {% if turk_id %}
+    Turk ID: {{ turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+  {% if turk_id %}
+    <h3>Start Tests:</h3>
+    <p>Choose a test from the list on the left.</p>
+  {% else %}
+      <form method="post" action="{% url 'cognitive_skills:register' %}" class="mt-2">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="turk_id">Turk ID</label>
+          <input type="text" class="form-control" id="turk_id" name="turk_id">
+          <small id="turkIDHelp" class="form-text text-muted">The ID provided to you by Amazon Mechanical Turk</small>
+        </div>
+        <button type="submit" class="mt-2 btn btn-primary">Start</button>
+      </form>
+  {% endif %}
+{% endblock %}
+
+{% block nav %}
+<nav>
+  <h2>Available Tests</h2 >
+    <ul>
+      {% for test in available_tests %}
+        <li><a href="{% url 'cognitive_skills:test' test.slug %}">{{ test }}</a></li>
+      {% endfor %}
+    </ul>
+    <h2>Completed Tests</h2 >
+      <ul>
+        {% for test in completed_tests %}
+          <li><a href="{% url 'cognitive_skills:test' test.slug %}">{{ test }}</a></li>
+        {% endfor %}
+      </ul>
+</nav>
+{% endblock %}

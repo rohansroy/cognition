@@ -1,0 +1,177 @@
+<h1>{{ test.name }}</h1>
+    <p class="instructions"></p>
+    <div class="box d-flex justify-content-center">
+        <p class="d-flex display" >
+            *
+        </p>
+    </div>
+    <p class="error">
+        Please only use arrow keys
+    </p>
+    <form method="post" action="{% url 'cognitive_skills:score' %}" class="score" name="score">
+        {% csrf_token %}
+        <input type="hidden" name="test" class="test" value="{{ test.id }}">
+        <input type="hidden" name="correct" class="correct">
+        <input type="hidden" name="total" class="total">
+        <input type="submit" value="submit">
+    </form>
+
+<script>
+    let testStart = false;
+  // left right up down
+const DIRECTION = ['up','down','left', 'right'];
+
+const intro = `This is a similar test designed to measure your response time. Let’s try some examples. 
+Please press the key that corresponds to the word you see on the screen.`
+
+const instructions = `Good! Up, Down, Left, Right are the only words you will see on this
+test. When ready, you are to press the key that corresponds to the word you see on
+the screen. Work as quickly as you can. You will have 60 seconds to perform the
+trial. Try not to make mistakes. Hit ‘spacebar’ when ready.`;
+
+const incorrectInputResponse = `“That’s not quite right. Try again. Press the key you see flash on the screen.”`;
+
+const nextPick = (exclude = undefined) => {
+    let _nextPick;
+    do {
+        _nextPick = Math.floor(Math.random() * 4);
+    } while (exclude !== undefined && _nextPick === exclude);
+    return _nextPick;
+}
+
+const messages = ["3","2","1","start"];
+const display = document.getElementsByClassName("display")[0];
+const instructionsUI = document.getElementsByClassName("instructions")[0];
+const errorUI = document.getElementsByClassName("error")[0];
+
+let counter = 0;
+let numCorrect = 0;
+let numIncorrect = 0;
+let currentSymbol = nextPick();
+
+display.innerHTML = DIRECTION[currentSymbol];
+instructionsUI.innerHTML = intro;
+
+/*
+    user input behavior
+    TODO: simplify timing events can be written in a particular order
+    TODO: fix the ablilty to beable to restart the test. test should only be taken once
+*/
+
+const matchKeyWithDirection = (direction) => {
+    if (DIRECTION[currentSymbol] === direction) {
+        numCorrect++;
+        console.log('correct response');
+    } else {
+        numIncorrect++;
+        console.log('incorrect response');
+    }
+    currentSymbol = nextPick(currentSymbol);
+    display.innerHTML = DIRECTION[currentSymbol];
+}
+
+const testKeyUpEventListener = (event) => {
+    if (testStart && event.code === 'ArrowUp') {
+        matchKeyWithDirection('up');
+    } else if (testStart && event.code === 'ArrowDown') {
+        matchKeyWithDirection('down');
+    } else if (testStart && event.code === 'ArrowLeft') {
+        matchKeyWithDirection('left');
+    } else if (testStart && event.code === 'ArrowRight') {
+        matchKeyWithDirection('right');
+    } else if (event.code === 'Space') {
+        if (testStart) {
+            console.log('space was pressed but test was already started');
+        } else { 
+            testStart = true;
+            let initSessionTimer = setInterval(change, 1000);
+
+            function change() {
+                console.log(`print ${messages[counter]}`);
+                display.innerHTML = messages[counter];
+                counter += 1;
+                if (counter > messages.length) {
+                    clearInterval(initSessionTimer);
+                    display.innerHTML = DIRECTION[currentSymbol];
+                    
+                    setTimeout(() => {
+                        console.log("end session");
+                        testStart = false;
+                        display.innerHTML = "finish";
+                        console.log(`number correct: ${numCorrect} \n 
+                                    number incorrect: ${numIncorrect} \n
+                                    total attempts: ${numCorrect + numIncorrect} `);
+                        document.getElementsByClassName("correct")[0].value = numCorrect;
+                        document.getElementsByClassName("total")[0].value = numCorrect + numIncorrect;
+                        const scoreForm = document.score;
+                        scoreForm.style.display = "block";
+                        errorUI.style.visibility = "hidden";
+                        document.removeEventListener("keyup", testKeyUpEventListener);
+                        document.removeEventListener("keyup", _sampleTestKeyUpEventListener);
+                    }, 5000);
+                }
+            }
+            console.log('space was pressed lets start the count down animantion');
+        }
+    } else {
+        errorUI.style.visibility = "visible";
+        console.log('invalid button press');
+    }
+};
+
+
+const sampleTestKeyUpEventListener = (event) => {
+    // what to do when finsihed with the examples
+    const MAX_SAMPLES = 3;
+    let sampleCount = 0;
+
+    const MAX_TRIAL_SAMPLES = 2;
+    let numTrials = 0;
+
+    const matchKeyWithDirectionSample = (direction) => {
+        if (DIRECTION[currentSymbol] === direction) {
+            console.log('sample correct response');
+            currentSymbol = nextPick(currentSymbol);
+            display.innerHTML = DIRECTION[currentSymbol];
+            sampleCount++;
+        } else {
+            numTrials++;
+            console.log('sample incorrect response');
+        }
+    }
+
+    return function keyupEventHandler(event) {
+        if (sampleCount > MAX_SAMPLES) {
+        // remove current event listener
+            document.removeEventListener('keyup',sampleTestKeyUpEventListener);
+            document.addEventListener('keyup', testKeyUpEventListener);
+            errorUI.style.visibility = "hidden";
+            instructionsUI.innerHTML = instructions;
+            display.innerHTML = "*";
+            return;
+        }
+
+        if (numTrials > MAX_TRIAL_SAMPLES) {
+            window.location.href = "/discontinued"
+        }
+
+        if (event.code === 'ArrowUp') {
+            matchKeyWithDirectionSample('up');
+        } else if (event.code === 'ArrowDown') {
+            matchKeyWithDirectionSample('down');
+        } else if (event.code === 'ArrowLeft') {
+            matchKeyWithDirectionSample('left');
+        } else if (event.code === 'ArrowRight') {
+            matchKeyWithDirectionSample('right');
+        } else {
+            console.log('invalid button press');
+            errorUI.style.visibility = "visible";
+
+        }
+        console.log(sampleCount);
+
+    }
+}
+const _sampleTestKeyUpEventListener = sampleTestKeyUpEventListener();
+document.addEventListener("keyup", _sampleTestKeyUpEventListener);
+</script>

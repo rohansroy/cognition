@@ -1,0 +1,111 @@
+<h1>{{ test.name }}</h1>
+    <p class="instructions"></p>
+    <div class="box d-flex justify-content-center">
+        <p class="d-flex display" >
+            *
+        </p>
+    </div>
+    <p class="error">
+        Please only use arrow keys
+    </p>
+    <form method="post" action="{% url 'cognitive_skills:score' %}" class="score" name="score">
+        {% csrf_token %}
+        <input type="hidden" name="test" class="test" value="{{ test.id }}">
+        <input type="hidden" name="correct" class="correct">
+        <input type="hidden" name="total" class="total">
+        <input type="submit" value="submit">
+    </form>
+
+<script>
+    let testStart = false;
+    // left right up down
+    const DIRECTION = ['up','down','left', 'right'];
+    const DIRECTION_ICON = [
+        `<svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-up-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+            </svg>`, 
+        `<svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-down-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+            </svg>`,
+        ` <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+            </svg>`, 
+        `<svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-right-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+            </svg>`
+    ]
+    const nextPick = (count, exclude = undefined) => {
+        let _nextPick;
+        do {
+            _nextPick = Math.floor(Math.random() * count);
+        } while (exclude !== undefined && _nextPick === exclude);
+        return _nextPick;
+    }
+
+    const intro = `This is a test designed to measure your attention. Every time you see the word “up” or the symbol 
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-up-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                        </svg>, 
+                        press the 
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-up-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                        </svg> key. Let’s practice. Press space bar to start.`;
+    const incorrectInputResponse = `“That’s not quite right. Try again. Press the key you see flash on the screen.”`;
+    const display = document.getElementsByClassName("display")[0];
+    const instructionsUI = document.getElementsByClassName("instructions")[0];
+    const errorUI = document.getElementsByClassName("error")[0];
+    let currentSymbol = nextPick(4);
+    instructionsUI.innerHTML = intro;
+    display.innerHTML = " ";
+    let score = 0;
+    let trials = 0;
+    const totalTrials = 5;
+    let incorrectPresses = 0;
+    let numberOfUps = 0;
+    const matchKeyWithDirection = (direction) => {
+        if (DIRECTION[currentSymbol] === direction) {
+            score++;
+            console.log('correct response');
+        } else {
+            incorrectPresses++;
+            console.log('incorrect response');
+        }
+    }
+    const testKeyUpEventListener = (event) => {
+        if (testStart && event.code === 'ArrowUp') {
+            matchKeyWithDirection('up');
+        } else if (!testStart && event.code === 'Space') {
+            testStart = true;
+            // run time
+            setTimeout(nextTimedSymbol, 3000);
+            function nextTimedSymbol() {
+                currentSymbol = nextPick();
+                if (currentSymbol === 0) {
+                    numberOfUps++;
+                }
+                display.innerHTML = DIRECTION_ICON[currentSymbol];
+                setTimeout(() => {
+                    display.innerHTML = " ";
+                }, 300);
+                trials++;
+                if (trials < totalTrials) {
+                    setTimeout(nextTimedSymbol, 3000);
+                } else {
+                    console.log('this test is finished');
+                    console.log(`number of iterations: ${totalTrials} 
+                                 total correct: ${score}
+                                 incorrect presses: ${incorrectPresses}
+                                 number of ups: ${numberOfUps}
+                                 `)
+                    document.removeEventListener("keyup", testKeyUpEventListener);
+                }
+            }
+            console.log('space was pressed lets start the count down animantion');
+        } else {
+            errorUI.style.visibility = "visible";
+            console.log('invalid button press');
+        }
+    }
+    const _sampleTestKeyUpEventListener = sampleTestKeyUpEventListener();
+    document.addEventListener("keyup", _sampleTestKeyUpEventListener);
+</script>

@@ -1,0 +1,199 @@
+<h1>{{ test.name }}</h1>
+    <p class="instructions"></p>
+    <div class="box d-flex justify-content-center">
+        <p class="d-flex display" >
+            *
+        </p>
+    </div>
+    <p class="error">
+        Please only use arrow keys
+    </p>
+    <form method="post" action="{% url 'cognitive_skills:score' %}" class="score" name="score">
+        {% csrf_token %}
+        <input type="hidden" name="test" class="test" value="{{ test.id }}">
+        <input type="hidden" name="correct" class="correct">
+        <input type="hidden" name="total" class="total">
+        <input type="submit" value="submit">
+    </form>
+
+<script>
+    let testStart = false;
+        // left right up down
+    const DIRECTION = ['up','down','left', 'right'];
+    const DIRECTION_ICON = [
+        `<svg style="border: 1px solid black;" width="0.8em" height="0.8em" viewBox="0 0 16 16" class="bi bi-arrow-up-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+            </svg>`, 
+        `<svg style="border: 1px solid black;" width="0.8em" height="0.8em" viewBox="0 0 16 16" class="bi bi-arrow-down-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+            </svg>`,
+        ` <svg style="border: 1px solid black;" width="0.8em" height="0.8em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+            </svg>`, 
+        `<svg style="border: 1px solid black;" width="0.8em" height="0.8em" viewBox="0 0 16 16" class="bi bi-arrow-right-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+            </svg>`
+    ]
+    const instructions = `This next task you will see a random sequence of <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-arrow-up-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+        </svg>,
+        <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-arrow-down-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+        </svg>,
+        <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+        </svg>,
+        <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-arrow-right-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+        </svg>, flash on screen. Try to remember it to the best of your ability. Press <strong> spacebar </strong> to start and proceed to enter in the sequence.`
+    const messages = ["3","2","1","start"];
+    let display = document.getElementsByClassName("display")[0];
+    const instructionsUI = document.getElementsByClassName("instructions")[0];
+    const errorUI = document.getElementsByClassName("error")[0];
+    instructionsUI.innerHTML = instructions;
+    const nextPick = (count, exclude = undefined) => {
+        let _nextPick;
+        do {
+            _nextPick = Math.floor(Math.random() * count);
+        } while (exclude !== undefined && _nextPick === exclude);
+        return _nextPick;
+    }
+    let difficulty = 3; // generates a sequence
+    const choices = 4;
+    /**
+        you will be given two sequences per diffculty
+        a difficulty is the number of arrows in the sequence
+        start with 3 in a sequence
+        you are scored with either 0, 1, 2 per difficulty
+        and are allowed to progress to the next when 1 or more attempts are sucessfully
+        arrows will flash for 1.5 seconds before user will be allowed to make an attempt
+        is there a wait time after each difficulty
+        is there a time limit to making you attempt?
+        are all arrows supposed to be in a single line or can i create multiple lines with arrows
+        straight line memorization
+        all values must be avaiable before i eval
+        overflow or underflow mark wrong
+        test is now complete when finished with the trials
+        example should have 4 things
+    */
+    
+    /**
+        need to know if there are any font changes allowed when increasing the sequence size
+    */ 
+    
+    // when the space bar gets hit person enters the characters within the time limit
+    // need to switch from 
+    let sampleTestStart = false;
+    let randomSequence = [];
+    let pointer = 0;
+    let pass = true;
+    let stage = 1;
+    let score = 0;
+    // need to check 2 trials
+    // if 1 passes then we are good
+    // number of trials in difficluty
+    // before upgrading to the next difficulty
+    // 
+    /*
+        as long as pointer is less than the difficulty keep accepting values
+    */
+    function answerEventListener(event) {
+        if (pointer >= difficulty - 1) {
+            if (pass === true) {
+                score++;
+            }
+            
+            if (stage === 2) {
+                if (score > 0) {
+                    difficulty++;
+                    stage = 0;
+                    score = 0;
+                } else {
+                    console.log('test is done');
+                    document.removeEventListener("keyup", answerEventListener);
+                    return;        
+                }
+            }
+            console.log(`complete! diffiulty: ${difficulty} stage: ${stage}`);
+            stage++;
+            pointer = 0;
+            pass = true;
+            console.log('done with input')
+            document.removeEventListener("keyup", answerEventListener);
+            document.addEventListener("keyup", sampleTestKeyUpEventListener);
+            return;
+        }
+        const dirValue = randomSequence[pointer];
+        if (event.code === 'ArrowUp') {
+            console.log('up');
+            if (pass && DIRECTION[dirValue] === 'up' ) {
+                console.log('match has been made');
+            } else {
+                console.log('incorrect match');
+                pass = false;
+            }
+            pointer++;
+        } else if (event.code === 'ArrowDown') {
+            console.log('down');
+            if (pass && DIRECTION[dirValue] === 'down') {
+                console.log('match has been made');
+            } else {
+                console.log('incorrect match');
+                pass = false;
+            }
+            pointer++;
+        } else if (event.code === 'ArrowLeft') {
+            console.log('left');
+            if (pass && DIRECTION[dirValue] === 'left') {
+                console.log('match has been made');
+            } else {
+                console.log('incorrect match');
+                pass = false;
+            }
+            pointer++;
+        } else if (event.code === 'ArrowRight') {
+            console.log('right');
+            if (pass && DIRECTION[dirValue] === 'right') {
+                console.log('match has been made');
+            } else {
+                console.log('incorrect match');
+                pass = false;
+            }
+            pointer++;
+        } else {
+            console.log('incorrect input');
+            errorUI.style.visibility = "visible";
+        }
+    }
+    function sampleTestKeyUpEventListener(event){
+        if (event.code === 'Space') {
+            if (testStart) {
+                console.log('space was pressed but test was already started');
+            } else { 
+                console.log('test will start')
+                    sampleTestStart = true;
+                    randomSequence = [];
+                    for (let i = 0; i < difficulty; i++) {
+                        randomSequence.push(nextPick(choices));
+                    }
+                    let newSequence = randomSequence.reduce((acc, current) => {
+                        return acc + DIRECTION_ICON[current];
+                    }, "");
+                    
+                    display.innerHTML = newSequence;
+                    setTimeout(() => {
+                        display.innerHTML = "";
+                        // after this is complete switch to another event listener
+                        document.removeEventListener("keyup", sampleTestKeyUpEventListener);
+                        document.addEventListener("keyup", answerEventListener);
+                        errorUI.style.visibility = "hidden";
+                    }, 3000);
+                }
+            } else {
+                errorUI.style.visibility = "visible";
+                console.log('invalid button press');
+            }
+        }
+        const _sampleTestKeyUpEventListener = sampleTestKeyUpEventListener();
+        document.addEventListener("keyup", _sampleTestKeyUpEventListener);      
+    </script>

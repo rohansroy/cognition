@@ -1,0 +1,30 @@
+{% extends 'cognitive_skills/base.html' %}
+
+{% block user %}
+  {% if turk_id %}
+    Turk ID: {{ turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+    {% with template_name=test.slug|stringformat:"s"|add:".html" %}
+      {% include "cognitive_skills/"|add:template_name %}
+    {% endwith %}
+{% endblock %}
+
+{% block nav %}
+<nav>
+  <h2>Available Tests</h2 >
+    <ul>
+      {% for test in available_tests %}
+        <li><a href="{% url 'cognitive_skills:test' test.slug %}">{{ test }}</a></li>
+      {% endfor %}
+    </ul>
+    <h2>Completed Tests</h2 >
+      <ul>
+        {% for test in completed_tests %}
+          <li><a href="{% url 'cognitive_skills:test' test.slug %}">{{ test }}</a></li>
+        {% endfor %}
+      </ul>
+</nav>
+{% endblock %}
