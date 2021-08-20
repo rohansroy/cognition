@@ -9,8 +9,8 @@ def index(request):
     context = {
         'title': 'Cognitive Skills App',
         'turk_id': request.session.get('turk_id', None),
-        'available_tests': Test.objects.exclude(results__worker_id=worker_id),
-        'completed_tests': Test.objects.filter(results__worker_id=worker_id),
+        'available_tests': Test.objects.exclude(results__worker_id=worker_id) if worker_id else Test.objects.all(),
+        'completed_tests': Test.objects.filter(results__worker_id=worker_id) if worker_id else [],
     }
 
     return render(request, 'cognitive_skills/index.html', context)
@@ -58,8 +58,8 @@ def test(request, slug):
     
     worker_id = request.session.get('turk_id')
     context = {
-        'available_tests': Test.objects.exclude(results__worker_id=worker_id),
-        'completed_tests': Test.objects.filter(results__worker_id=worker_id),
+        'available_tests': Test.objects.exclude(results__worker_id=worker_id) if worker_id else Test.objects.all(),
+        'completed_tests': Test.objects.filter(results__worker_id=worker_id) if worker_id else [],
         'test': get_object_or_404(Test, slug=slug),
         'turk_id': worker_id,
     }
@@ -71,8 +71,8 @@ def summary(request):
     
     context = {
         'turk_id': worker_id,
-        'available_tests': Test.objects.exclude(results__worker_id=worker_id),
-        'completed_tests': Test.objects.filter(results__worker_id=worker_id),
+        'available_tests': Test.objects.exclude(results__worker_id=worker_id) if worker_id else Test.objects.all(),
+        'completed_tests': Test.objects.filter(results__worker_id=worker_id) if worker_id else [],
         'results': results,
     }
 
