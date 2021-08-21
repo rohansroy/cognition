@@ -21,13 +21,9 @@
   // left right up down
 const DIRECTION = ['up','down','left', 'right'];
 
-const intro = `This is a similar test designed to measure your response time. Let’s try some examples. 
-Please press the key that corresponds to the word you see on the screen.`
+const intro = `{{ test.introduction }}`
 
-const instructions = `Good! Up, Down, Left, Right are the only words you will see on this
-test. When ready, you are to press the key that corresponds to the word you see on
-the screen. Work as quickly as you can. You will have 60 seconds to perform the
-trial. Try not to make mistakes. Hit ‘spacebar’ when ready.`;
+const instructions = `{{ test.description }}`;
 
 const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
 

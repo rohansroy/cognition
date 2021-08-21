@@ -29,17 +29,11 @@
         return _nextPick;
     }
 
-    const intro = `This test is like the one you just finished, but slightly different. You are to press the
-    <strong>opposite</strong> directional key than the one you see flash on the screen, ignoring the key that is
-    on the screen. Let’s do some examples:`
+    const intro = `{{ test.introduction }}`
     
     const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
 
-    const instructions = `Good! Up, Down, Left, and Right are the only words you will see on
-    this test. When ready, you are to press the <strong>opposite</strong> directional key that
-    corresponds to the word you see flash on the screen. Work as quickly as you can.
-    You will have 60 seconds to perform the trial. Try not to make mistakes. Hit
-    ‘spacebar’ when ready.`
+    const instructions = `{{ test.description }}`
 
     const messages = ["3","2","1","start"];
     const display = document.getElementsByClassName("display")[0];

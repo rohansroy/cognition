@@ -35,17 +35,11 @@
         </svg>`
     ]
 
-    const intro = `This time, for many of the trials, you should do the same thing you
-    just did: Press the <strong>opposite</strong> directional symbol that is displayed. But if a symbol is
-    inside a box, you should <strong>match the symbol exactly</strong>. Let’s practice.`
+    const intro = `{{ test.introduction }}`
 
     const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
 
-    const instructions = `Good! Up, Down, Left, Right are the only words or symbols you will
-    see on this test. When ready, you are to press the <strong>opposite</strong> directional key or key
-    corresponding to a word or <strong>match the symbol/word exactly</strong> if it is in a box.
-    Work as quickly as you can. You will have 60 seconds to perform the trial. Try
-    not to make mistakes. Hit ‘spacebar’ when ready.`
+    const instructions = `{{ test.description }}`
 
     const nextPick = (count, exclude = undefined) => {
         let _nextPick;
