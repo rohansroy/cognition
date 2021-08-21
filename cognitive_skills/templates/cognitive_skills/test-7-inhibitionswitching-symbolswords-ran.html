@@ -49,6 +49,16 @@
         return _nextPick;
     }
 
+    const toggleBordered = (bordered) => {
+        if(bordered) {
+            display.classList.add('bordered');
+            display.classList.remove('unbordered');
+        } else {
+            display.classList.add('unbordered');
+            display.classList.remove('bordered');
+        }
+    };
+
     const messages = ["3","2","1","start"];
     let display = document.getElementsByClassName("display")[0];
     const instructionsUI = document.getElementsByClassName("instructions")[0];
@@ -63,8 +73,8 @@
 
     let borderFlag = !!(nextPick(2) == 0);
 
-    display.style.border = (borderFlag) ? '10px solid black' : '0px solid black';
     display.innerHTML = getWordOrSymbolChoice();
+    toggleBordered(borderFlag);
 
     function getWordOrSymbolChoice() {
     currentSymbol = nextPick(4, currentSymbol);
@@ -104,8 +114,8 @@
     }
 
     borderFlag = !!(nextPick(2) == 0);
-    display.style.border = (borderFlag) ? '10px solid black' : '0px solid black';
     display.innerHTML = getWordOrSymbolChoice();
+    toggleBordered(borderFlag);
     }
 
     const testKeyUpEventListener = (event) => {
@@ -182,7 +192,7 @@
 
             borderFlag = !!(nextPick(2) == 0);
             display.innerHTML = getWordOrSymbolChoice();
-            display.style.border = (borderFlag) ? '10px solid black' : '0px solid black';
+            toggleBordered(borderFlag);
         } else {
             numTrials++;
             console.log('sample incorrect response');
@@ -193,7 +203,7 @@
             console.log('sample correct response');
             borderFlag = !!(nextPick(2) == 0);
             display.innerHTML = getWordOrSymbolChoice();
-            display.style.border = (borderFlag) ? '10px solid black' : '0px solid black';
+            toggleBordered(borderFlag);
         } else {
             numTrials++;
             console.log('sample incorrect response');
@@ -208,7 +218,7 @@
             document.addEventListener('keyup', testKeyUpEventListener);
             errorUI.style.visibility = "hidden";
             instructionsUI.innerHTML = instructions;
-            display.style.border = '0px solid black';
+            toggleBordered(0);
             display.innerHTML = "*";
             return;
         }
