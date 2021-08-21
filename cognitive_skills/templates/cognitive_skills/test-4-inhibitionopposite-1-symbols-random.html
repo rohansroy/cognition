@@ -47,6 +47,8 @@
     are to press the <strong>opposite</strong> directional key than the one you see, ignoring the key
     that is on the screen. Let’s try some examples.`;
 
+    const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
+
     const instructions = 
     `“Good! 
     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -154,8 +156,18 @@
         const MAX_TRIAL_SAMPLES = 2;
         let numTrials = 0;
 
+        const clearError = (error) => {
+            error.style.visibility = 'hidden';
+        }
+
+        const showError = (error, message) => {
+            error.innerHTML = message;
+            error.style.visibility = 'visible';
+        }
+
         const matchKeyWithDirectionSample = (direction) => {
             if (DIRECTION[currentSymbol] === direction) {
+                clearError(errorUI);
                 console.log('sample correct response');
                 currentSymbol = nextPick(4, currentSymbol);
                 display.innerHTML = DIRECTION_ICON[currentSymbol];
@@ -178,7 +190,8 @@
             }
 
             if (numTrials > MAX_TRIAL_SAMPLES) {
-                window.location.href = "/discontinued"
+                // window.location.href = "/discontinued"
+                showError(errorUI, incorrectInputResponse);
             }
 
             if (event.code === 'ArrowUp') {

@@ -39,6 +39,8 @@
     just did: Press the <strong>opposite</strong> directional symbol that is displayed. But if a symbol is
     inside a box, you should <strong>match the symbol exactly</strong>. Let’s practice.`
 
+    const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
+
     const instructions = `Good! Up, Down, Left, Right are the only words or symbols you will
     see on this test. When ready, you are to press the <strong>opposite</strong> directional key or key
     corresponding to a word or <strong>match the symbol/word exactly</strong> if it is in a box.
@@ -167,10 +169,20 @@
     const MAX_TRIAL_SAMPLES = 2;
     let numTrials = 0;
 
+    const clearError = (error) => {
+        error.style.visibility = 'hidden';
+    }
+
+    const showError = (error, message) => {
+        error.innerHTML = message;
+        error.style.visibility = 'visible';
+    }
+
     const matchKeyWithDirectionSample = (direction, oppDirection, hasBorder) => {
         console.log(`hasborder?: ${hasBorder ? 'yes':'no'}, entered:${direction}, shown:${DIRECTION[currentSymbol]}`);
         if (hasBorder) {
         if (DIRECTION[currentSymbol] === direction) {
+            clearError(errorUI);
             sampleCount++;
             console.log('sample correct response');
 
@@ -208,7 +220,8 @@
         }
 
         if (numTrials > MAX_TRIAL_SAMPLES) {
-            window.location.href = "/discontinued"
+            // window.location.href = "/discontinued"
+            showError(errorUI, incorrectInputResponse);
         }
 
         if (event.code === 'ArrowUp') {

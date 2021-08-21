@@ -45,7 +45,7 @@
     seconds to perform the trial. Try not to make mistakes. Hit ‘spacebar’ when
     ready.`
 
-    const incorrectInputResponse = `“That’s not quite right. Try again. Press the key you see flash on the screen.”`;
+    const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
 
     const nextPick = (count, exclude = undefined) => {
     let _nextPick;
@@ -155,8 +155,18 @@
     const MAX_TRIAL_SAMPLES = 2;
     let numTrials = 0;
 
+    const clearError = (error) => {
+        error.style.visibility = 'hidden';
+    }
+
+    const showError = (error, message) => {
+        error.innerHTML = message;
+        error.style.visibility = 'visible';
+    }
+
     const matchKeyWithDirectionSample = (direction) => {
         if (DIRECTION[currentSymbol] === direction) {
+            clearError(errorUI);
             console.log('sample correct response');
             display.innerHTML = getWordOrSymbolChoice();
             sampleCount++;
@@ -178,7 +188,8 @@
         }
 
         if (numTrials > MAX_TRIAL_SAMPLES) {
-            window.location.href = "/discontinued"
+            // window.location.href = "/discontinued"
+            showError(errorUI, incorrectInputResponse);
         }
 
         if (event.code === 'ArrowUp') {

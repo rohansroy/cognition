@@ -40,6 +40,8 @@
     corresponding to a word than the one you see flash on the screen. Let’s do some
     examples.`
 
+    const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
+
     const instructions = `Good! Up, Down, Left, Right are the only words or symbols you will
     see on this test. When ready, you are to press the <strong>opposite</strong> directional key or key
     corresponding to a word than the one you see on the screen. Work as quickly as
@@ -145,8 +147,18 @@
         const MAX_TRIAL_SAMPLES = 2;
         let numTrials = 0;
 
+        const clearError = (error) => {
+            error.style.visibility = 'hidden';
+        }
+
+        const showError = (error, message) => {
+            error.innerHTML = message;
+            error.style.visibility = 'visible';
+        }
+
         const matchKeyWithDirectionSample = (direction) => {
             if (DIRECTION[currentSymbol] === direction) {
+                clearError(errorUI);
                 console.log('sample correct response');
                 display.innerHTML = getWordOrSymbolChoice();
                 sampleCount++;
@@ -167,7 +179,8 @@
             }
 
             if (numTrials > MAX_TRIAL_SAMPLES) {
-                window.location.href = "/discontinued"
+                // window.location.href = "/discontinued"
+                showError(errorUI, incorrectInputResponse);
             }
 
             if (event.code === 'ArrowUp') {

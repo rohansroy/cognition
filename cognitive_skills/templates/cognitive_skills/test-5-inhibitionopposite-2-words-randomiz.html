@@ -32,6 +32,8 @@
     const intro = `This test is like the one you just finished, but slightly different. You are to press the
     <strong>opposite</strong> directional key than the one you see flash on the screen, ignoring the key that is
     on the screen. Let’s do some examples:`
+    
+    const incorrectInputResponse = `That’s not quite right. Try again. Press the key you see flash on the screen.`;
 
     const instructions = `Good! Up, Down, Left, and Right are the only words you will see on
     this test. When ready, you are to press the <strong>opposite</strong> directional key that
@@ -120,8 +122,18 @@
         const MAX_TRIAL_SAMPLES = 2;
         let numTrials = 0;
 
+        const clearError = (error) => {
+            error.style.visibility = 'hidden';
+        }
+
+        const showError = (error, message) => {
+            error.innerHTML = message;
+            error.style.visibility = 'visible';
+        }
+
         const matchKeyWithDirectionSample = (direction) => {
             if (DIRECTION[currentSymbol] === direction) {
+                clearError(errorUI);
                 console.log('sample correct response');
                 currentSymbol = nextPick(4, currentSymbol);
                 display.innerHTML = DIRECTION[currentSymbol];
@@ -144,7 +156,8 @@
             }
 
             if (numTrials > MAX_TRIAL_SAMPLES) {
-                window.location.href = "/discontinued"
+                // window.location.href = "/discontinued"
+                showError(errorUI, incorrectInputResponse);
             }
 
             if (event.code === 'ArrowUp') {
