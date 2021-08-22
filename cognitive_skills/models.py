@@ -27,8 +27,13 @@ class Result(models.Model):
     def __str__(self):
         return f"Worker: {self.worker_id} {self.test.name} {self.correct}/{self.total}"
 
+    @property
     def pctCorrect(self):
         try:
             return "{:.2f}".format(self.correct / self.total)
         except ZeroDivisionError as e:
             return "{:.2f}".format(0.0)
+    
+    @property
+    def incorrect(self):
+        return self.total - self.correct
