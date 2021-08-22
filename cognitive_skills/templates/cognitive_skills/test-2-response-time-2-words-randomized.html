@@ -1,6 +1,8 @@
 <h1>{{ test.name }}</h1>
     <p class="instructions"></p>
     <div class="box d-flex justify-content-center">
+        <p class='correct-answer'>✅</p>
+        <p class='incorrect-answer'>❌</p>
         <p class="d-flex display" >
             *
         </p>
@@ -36,9 +38,18 @@ const nextPick = (exclude = undefined) => {
 }
 
 const messages = ["3","2","1","start"];
+const box = document.getElementsByClassName("box")[0];
 const display = document.getElementsByClassName("display")[0];
 const instructionsUI = document.getElementsByClassName("instructions")[0];
 const errorUI = document.getElementsByClassName("error")[0];
+
+const correctAnswer = () => {
+    return document.getElementsByClassName('correct-answer')[0];
+};
+
+const incorrectAnswer = () => {
+    return document.getElementsByClassName('incorrect-answer')[0];
+};
 
 let counter = 0;
 let numCorrect = 0;
@@ -55,13 +66,23 @@ instructionsUI.innerHTML = intro;
 */
 
 const matchKeyWithDirection = (direction) => {
+    let icons = document.getElementsByClassName('animate-answer');
+    for(var i = icons.length - 1; i >= 0; i--) {
+        icons[i].parentNode.removeChild(icons[i]);
+    };
+    let newIcon;
     if (DIRECTION[currentSymbol] === direction) {
         numCorrect++;
+        newIcon = correctAnswer().cloneNode(true);
         console.log('correct response');
     } else {
         numIncorrect++;
+        newIcon = incorrectAnswer().cloneNode(true);
         console.log('incorrect response');
     }
+    newIcon.style.visibility = 'visible';
+    box.appendChild(newIcon);
+    newIcon.classList.add('animate-answer');
     currentSymbol = nextPick(currentSymbol);
     display.innerHTML = DIRECTION[currentSymbol];
 }
@@ -134,16 +155,26 @@ const sampleTestKeyUpEventListener = (event) => {
     }
 
     const matchKeyWithDirectionSample = (direction) => {
+        let icons = document.getElementsByClassName('animate-answer');
+        for(var i = icons.length - 1; i >= 0; i--) {
+            icons[i].parentNode.removeChild(icons[i]);
+        };
+        let newIcon;
         if (DIRECTION[currentSymbol] === direction) {
             clearError(errorUI);
             console.log('sample correct response');
+            newIcon = correctAnswer().cloneNode(true);
             currentSymbol = nextPick(currentSymbol);
             display.innerHTML = DIRECTION[currentSymbol];
             sampleCount++;
         } else {
             numTrials++;
+            newIcon = incorrectAnswer().cloneNode(true);
             console.log('sample incorrect response');
         }
+        newIcon.style.visibility = 'visible';
+        box.appendChild(newIcon);
+        newIcon.classList.add('animate-answer');
     }
 
     return function keyupEventHandler(event) {

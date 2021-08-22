@@ -12,42 +12,33 @@
       body {
       }
 
-      .correct-answer {
-        animation-name: pulsegreen;
+      .animate-answer {
+        animation-name: fade;
         animation-duration: 1s;
+        opacity:0;
+      }
+
+      @keyframes fade {
+        0% { opacity: 0; }
+        50% { opacity:1; }
+        100% { opacity:0; }
+      } 
+
+      .correct-answer {
+        position:absolute;
+        top:-30px;
+        right:-30px;
+        font-size:4rem !important;
+        color:green;
+        visibility: hidden;
       }
 
       .incorrect-answer {
-        animation-name: pulsered;
-        animation-duration: .1s;
-      }
-
-      @keyframes pulsegreen {
-        0% {
-          border:0;
-        }
-
-        75% {
-          border:10px solid #5ec65e;
-        }
-
-        100% {
-          border:0;
-        }
-      }
-
-      @keyframes pulsered {
-        0% {
-          border:0;
-        }
-
-        75% {
-          border:10px solid red;
-        }
-
-        100% {
-          border:0;
-        }
+        position:absolute;
+        top:-30px;
+        right:-30px;
+        font-size:4rem !important;
+        visibility: hidden;
       }
 
       .main {
@@ -83,6 +74,7 @@
       }
 
       .box {
+        position:relative;
         background-color: yellow; min-height: 15em; text-align:center;
       }
 
