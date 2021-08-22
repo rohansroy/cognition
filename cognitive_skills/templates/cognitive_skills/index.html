@@ -1,13 +1,13 @@
 {% extends 'cognitive_skills/base.html' %}
 
 {% block user %}
-  {% if turk_id %}
-    Turk ID: {{ turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+  {% if worker %}
+    Turk ID: {{ worker.turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
   {% endif %}
 {% endblock %}
 
 {% block main %}
-  {% if turk_id %}
+  {% if worker %}
     <h3>Start Tests:</h3>
     <p>Choose a test from the list on the left.</p>
   {% else %}

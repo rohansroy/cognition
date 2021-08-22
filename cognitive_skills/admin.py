@@ -1,6 +1,6 @@
 import csv
 from django.contrib import admin
-from cognitive_skills.models import Test, Result
+from cognitive_skills.models import Test, Result, Worker
 from django.http import HttpResponse
 
 
@@ -18,7 +18,8 @@ class TestAdmin(admin.ModelAdmin):
 class ResultAdmin(admin.ModelAdmin):
     search_fields = ('worker_id',)
     actions = ("export_as_csv",)
-    list_display = ('worker_id', 'test', 'correct', 'incorrect', 'total', 'pctCorrect',)
+    list_display = ('worker', 'test', 'correct', 'incorrect', 'total', 'pctCorrect',)
+    list_filter = ('test', )
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
@@ -37,5 +38,14 @@ class ResultAdmin(admin.ModelAdmin):
     
     export_as_csv.short_description = "Export CSV"
 
+class WorkerAdmin(admin.ModelAdmin):
+    search_fields = ('turk_id',)
+    list_display = ('turk_id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect',)
+
+    def completed_all_tests(self, obj):
+        return obj.completed_all_tests
+    completed_all_tests.boolean = True
+
 admin.site.register(Test, TestAdmin)
 admin.site.register(Result, ResultAdmin)
+admin.site.register(Worker, WorkerAdmin)
