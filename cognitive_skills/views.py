@@ -2,9 +2,10 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from .models import Test, Result, Worker
+from .forms import RegisterForm
 
 # Create your views here.
-def index(request):
+def index(request, register_form=None):
     worker_id = request.session.get('worker_id')
     try:
         if worker_id:
@@ -14,24 +15,46 @@ def index(request):
     except Worker.DoesNotExist:
         request.session.flush()
         return HttpResponseRedirect(reverse('cognitive_skills:home'))
+
+    register_form = register_form or RegisterForm()
+    
     context = {
         'title': 'Cognitive Skills App',
         'worker': worker,
         'available_tests': Test.objects.exclude(results__worker=worker) if worker else Test.objects.all(),
         'completed_tests': Test.objects.filter(results__worker=worker) if worker else [],
+        'register_form': register_form
     }
 
     return render(request, 'cognitive_skills/index.html', context)
 
 def register(request):
     if request.method == 'POST':
-        turk_id = request.POST.get('turk_id')
-        worker = Worker(turk_id=turk_id)
-        worker.save()
-        request.session['worker_id'] = str(worker.id)
-        first_test = Test.objects.all().first()
-        return HttpResponseRedirect(reverse('cognitive_skills:test', args=[first_test.slug]))
-    return HttpResponseNotFound()
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            turk_id = register_form.cleaned_data['turk_id']
+            worker = Worker(turk_id=turk_id)
+            worker.save()
+            request.session['worker_id'] = str(worker.id)
+            first_test = Test.objects.all().first()
+            return HttpResponseRedirect(reverse('cognitive_skills:test', args=[first_test.slug]))
+        else:
+            context = {
+                'title': 'Cognitive Skills App',
+                'worker': None,
+                'available_tests': Test.objects.all(),
+                'completed_tests': [],
+                'register_form': register_form
+            }
+            return render(request, 'cognitive_skills/index.html', context)
+    context = {
+        'title': 'Cognitive Skills App',
+        'worker': None,
+        'available_tests': Test.objects.all(),
+        'completed_tests': [],
+        'register_form': RegisterForm()
+    }
+    return render(request, 'cognitive_skills/index.html', context)
 
 def score(request):
     worker_id = request.session.get('worker_id')

@@ -11,14 +11,25 @@
     <h3>Start Tests:</h3>
     <p>Choose a test from the list on the left.</p>
   {% else %}
+    <h3>Register</h3>
       <form method="post" action="{% url 'cognitive_skills:register' %}" class="mt-2">
+        
         {% csrf_token %}
+        {% for field in register_form %}
         <div class="form-group">
-          <label for="turk_id">Turk ID</label>
-          <input type="text" class="form-control" id="turk_id" name="turk_id">
-          <small id="turkIDHelp" class="form-text text-muted">The ID provided to you by Amazon Mechanical Turk</small>
+          {{ field.label_tag }} {{ field }}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+          {% endif %}
+          {{ field.errors }}
         </div>
-        <button type="submit" class="mt-2 btn btn-primary">Start</button>
+        {% endfor %}
+          <!-- <label for="turk_id">Turk ID</label>
+          <input type="text" class="form-control" id="turk_id" name="turk_id">
+          <small id="turkIDHelp" class="form-text text-muted">The ID provided to you by Amazon Mechanical Turk</small> -->
+        <div class="form-group">
+          <button type="submit" class="mt-2 btn btn-primary">Start</button>
+        </div>
       </form>
   {% endif %}
 {% endblock %}
