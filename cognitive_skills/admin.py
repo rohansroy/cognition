@@ -16,7 +16,7 @@ class TestAdmin(admin.ModelAdmin):
         return {"slug": ("name",)}
 
 class ResultAdmin(admin.ModelAdmin):
-    search_fields = ('worker_id',)
+    search_fields = ('worker__turk_id',)
     actions = ("export_as_csv",)
     list_display = ('worker', 'test', 'correct', 'incorrect', 'total', 'pctCorrect',)
     list_filter = ('test', )
