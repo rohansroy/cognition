@@ -1,0 +1,25 @@
+{% extends 'cognitive_skills/base.html' %}
+
+{% block user %}
+  {% if worker %}
+    Turk ID: {{ worker.turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+  {% endif %}
+{% endblock %}
+
+{% block main %}
+<h3>{{ test.name }}</h3>
+
+<form method="post" action="{% url 'cognitive_skills:score' %}" class="" name="score">
+<p>Submit your scores, and move on to the next test.</p>
+{% csrf_token %}
+{% for field in result_form %}
+{{ field.label_tag }}
+  {{ field }} 
+{{ field.errors }}
+  
+{% endfor %}
+<div class="form-group">
+  <button type="submit" class="mt-3 submit btn btn-primary">Submit</button>
+</div>
+  
+{% endblock %}
