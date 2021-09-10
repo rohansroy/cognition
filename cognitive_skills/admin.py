@@ -41,6 +41,32 @@ class ResultAdmin(admin.ModelAdmin):
 class WorkerAdmin(admin.ModelAdmin):
     search_fields = ('id',)
     list_display = ('id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect',)
+    actions = ('export_as_csv',)
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = ['id', 'age', 'gender', 'city', 'state', 'ethnicity', 'education', 'marital_status', 'orientation', 'employment']
+        result_names = [
+            field.name for field in Result._meta.get_fields() if field.name in ['test', 'correct', 'total']
+        ]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+
+        writer = csv.writer(response)
+        writer.writerow(field_names + result_names * Test.objects.count())
+        for obj in queryset:
+            if obj.completed_all_tests:
+                results = list(
+                    { value['test']:value for value in obj.results.all().order_by('test__name').values('test', 'test__name', 'correct', 'total')}.values()
+                )
+                result_values = []
+                for result in results:
+                    result_values += [result['test__name'], result['correct'], result['total']]
+                row = writer.writerow([getattr(obj, field) for field in field_names] + result_values)
+        
+        return response
+    export_as_csv.short_description = "Export CSV"
 
     def completed_all_tests(self, obj):
         return obj.completed_all_tests

@@ -126,7 +126,7 @@ class Worker(models.Model):
 
 
 class Result(models.Model):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE, related_name='workers')
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE, related_name='results')
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='results')
     correct = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
