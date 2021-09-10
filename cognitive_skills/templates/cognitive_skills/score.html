@@ -2,7 +2,7 @@
 
 {% block user %}
   {% if worker %}
-    Turk ID: {{ worker.turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+    <a href="{% url 'cognitive_skills:reset' %}">✖️ Reset</a>
   {% endif %}
 {% endblock %}
 

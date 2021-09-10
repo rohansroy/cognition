@@ -2,7 +2,7 @@
 
 {% block user %}
   {% if worker %}
-    Turk ID: {{ worker.turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+    <a href="{% url 'cognitive_skills:reset' %}">✖️ Reset</a>
   {% endif %}
 {% endblock %}
 
@@ -12,21 +12,93 @@
     <p>Choose a test from the list on the left.</p>
   {% else %}
     <h3>Register</h3>
+    <p>Register below to begin the survey. Once you have completed the survey, you will receive a code to prove completion of the survey and receive credit.</p>
       <form method="post" action="{% url 'cognitive_skills:register' %}" class="mt-2">
         
         {% csrf_token %}
         {% for field in register_form %}
-        <div class="form-group">
-          {{ field.label_tag }} {{ field }}
-          {% if field.help_text %}
-            <small class="form-text text-muted">{{ field.help_text|safe }}</small>
-          {% endif %}
-          {{ field.errors }}
+        <div class="form-group row mt-2">
+          <label class="col-sm-2 col-form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+          <div class="col-sm-10">
+            {{ field }}
+            {% if field.help_text %}
+              <p class="form-text text-muted">{{ field.help_text|safe }}</p>
+            {% endif %}
+            {{ field.errors }}
+          </div>
         </div>
         {% endfor %}
-          <!-- <label for="turk_id">Turk ID</label>
-          <input type="text" class="form-control" id="turk_id" name="turk_id">
-          <small id="turkIDHelp" class="form-text text-muted">The ID provided to you by Amazon Mechanical Turk</small> -->
+        <h4 class="mt-3">Consent Cover Letter</h4>
+        <p class=''>Read the following document and confirm you've read it by checking the box below before beginning.</p>
+        <div class="border border-dark m-5 p-5">
+          <div class="row">
+            <div class="col-9">
+              <small class="text-muted">Michael Lopez</small>
+            </div>
+            <div class="col-3">
+              <small class="text-muted">Page 1 of 1</small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <small class="text-muted">Development and Creation of “The Arrows” Test: A Proprietary Repeatable Neuropsychological Test of Simple Attention, Processing Speed, and Executive Functioning</small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h4 class="text-center mt-4">Consent Cover Letter</h4>
+              <h4 class="text-center">Development and Creation of “The Arrows” Test</h4>
+              <p class="mt-3">The purpose of this research study is the establishment of baseline normative and reliability data for an
+                adult population on “The Arrows” test, a proprietary online and repeatable neuropsychological
+                assessment, which was created specifically to assess simple attention, processing speed, and executive
+                functioning abilities, in addition to establishing its validity and reliability</p>
+                <p>If you agree, you will participate in the completion of one demographic questionnaire and the completion
+                  of multiple online assessments using the keyboard. The assessment should take about 10-15 minutes.
+                  Your participation is completely voluntary. You may choose not to answer a question or are free to
+                  withdraw consent and discontinue participation in the assessment at any time for any reason without
+                  penalty or loss of benefits.</p>
+                  <p>There are no known risks associated with participating in this study. You may experience a benefit in the
+                    form of contributing to general scientific knowledge in the field of clinical neuropsychology</p>
+                    <p>The assessment will take place wherever you decide, preferably in a quiet setting. The recorded data will
+                      be stored as digital files on a password-protected computer. The files will be destroyed after data analysis
+                      is conducted. A randomized identification number will be attached to your data. You will not be identified
+                      in any publications. The information collected in this research will not be used for future research studies.</p>
+                      <p>If you have any questions complaints or if you feel you have been harmed by this research, please contact
+                        Michael Lopez, Ph.D., Physical Medicine &amp; Rehabilitation, at michael.lopez@hsc.utah.edu.</p>
+                        <p>Contact the Institutional Review Board (IRB) if you have questions regarding your rights as a research
+                          participant. Also, contact the IRB if you have questions, complaints or concerns which you do not feel
+                          you can discuss with the investigator. The University of Utah IRB may be reached by phone at (801) 581-
+                          3655 or by e-mail at irb@hsc.utah.edu.</p>
+                          <p>Research Participant Advocate: You may also contact the Research Participant Advocate (RPA) by
+                            phone at (801) 581-3803 or by email at participant.advocate@hsc.utah.edu.</p>
+                            <p>By participating in the survey, you are giving your consent to participate in this research. Thank you for
+                              your willingness to participate!</p>
+            </div>
+            <div class="row mt-5">
+              <div class="col-6">
+                <p class="small m-0 p-0 text-center text-muted">FOOTER FOR IRB USE ONLY</p>
+                  <p class="small m-0 p-0 text-center text-muted">Version: K0218</p>
+              </div>
+              <div class="col-6">
+                <div class="row border border-dark p-2">
+                  <div class="col-4">
+                    <div class="seal"></div>
+                  </div>
+                  <div class="col-8 text-center">
+                    <p class="small m-0 p-0 text-muted">University of Utah</p>
+                    <p class="small m-0 p-0 text-muted">Institutional Review Board</p>
+                    <p class="small m-0 p-0 text-muted">Exemption 4/21/2021</p>
+                    <p class="small m-0 p-0 text-muted">IRB_00139892</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <input name="confirmation_checkbox" type="radio" required>
+          <label for="confirmation_checkbox">I have read the above document.</label>
+        </div>
         <div class="form-group">
           <button type="submit" class="mt-2 btn btn-primary">Start</button>
         </div>

@@ -1,15 +1,17 @@
 from django import forms
 from captcha.fields import ReCaptchaField
-from .models import Result
 
-class RegisterForm(forms.Form):
+from .models import Result, Worker
+
+
+class RegisterForm(forms.ModelForm):
+    class Meta:
+        model = Worker
+        fields = ['age', 'city', 'state', 'gender', 'ethnicity', 'education', 'marital_status', 'orientation', 'employment']
     def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
-        self.fields['turk_id'].widget.attrs = {
-            'class': 'form-control'
-        }
+        super().__init__(*args, **kwargs)
+        self.fields['age'].widget.attrs.update({'min': 18, 'max': 120})
 
-    turk_id = forms.CharField(label="Turk ID", max_length=100, help_text="The ID provided to you by Amazon Mechanical Turk")
     captcha = ReCaptchaField()
 
 

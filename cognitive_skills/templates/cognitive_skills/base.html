@@ -12,6 +12,19 @@
       body {
       }
 
+      .terms {
+        border: 1px solid #333;
+      }
+
+      .seal {
+        width:100px;
+        height:100px;
+        background-repeat: no-repeat;
+        background-size:400px;
+        background-position-x: -150px;
+        background-image:url(https://umc.utah.edu/wp-content/uploads/2014/12/logos-other-symbols.png);
+      }
+
       .animate-answer {
         animation-name: fade;
         animation-duration: 1s;
@@ -120,10 +133,10 @@
       <div class="row">
         <header class="col-12">
           <div class="row">
-            <div class="col-9">
+            <div class="col-11">
               <a class="logo" href="{% url 'cognitive_skills:home' %}"><h1 class="p-3">Cognitive Skills Test</h1></a>
             </div>
-            <div class="col-3">
+            <div class="col-1">
               {% block user %}
               {% endblock %}
             </div>

@@ -30,11 +30,9 @@ def index(request, register_form=None):
 
 def register(request):
     if request.method == 'POST':
-        register_form = RegisterForm(request.POST)
-        if register_form.is_valid():
-            turk_id = register_form.cleaned_data['turk_id']
-            worker = Worker(turk_id=turk_id)
-            worker.save()
+        worker_form = RegisterForm(request.POST)
+        if worker_form.is_valid():
+            worker = worker_form.save()
             request.session['worker_id'] = str(worker.id)
             first_test = Test.objects.all().first()
             return HttpResponseRedirect(reverse('cognitive_skills:test', args=[first_test.slug]))
@@ -44,7 +42,7 @@ def register(request):
                 'worker': None,
                 'available_tests': Test.objects.all(),
                 'completed_tests': [],
-                'register_form': register_form
+                'register_form': worker_form
             }
             return render(request, 'cognitive_skills/index.html', context)
     context = {

@@ -16,7 +16,7 @@ class TestAdmin(admin.ModelAdmin):
         return {"slug": ("name",)}
 
 class ResultAdmin(admin.ModelAdmin):
-    search_fields = ('worker__turk_id',)
+    search_fields = ('worker__id',)
     actions = ("export_as_csv",)
     list_display = ('worker', 'test', 'correct', 'incorrect', 'total', 'pctCorrect',)
     list_filter = ('test', )
@@ -39,8 +39,8 @@ class ResultAdmin(admin.ModelAdmin):
     export_as_csv.short_description = "Export CSV"
 
 class WorkerAdmin(admin.ModelAdmin):
-    search_fields = ('turk_id',)
-    list_display = ('turk_id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect',)
+    search_fields = ('id',)
+    list_display = ('id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect',)
 
     def completed_all_tests(self, obj):
         return obj.completed_all_tests

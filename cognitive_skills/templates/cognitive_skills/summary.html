@@ -2,15 +2,19 @@
 
 {% block user %}
   {% if worker %}
-    Turk ID: {{ worker.turk_id }} <a href="{% url 'cognitive_skills:reset' %}">✖️</a>
+    <a href="{% url 'cognitive_skills:reset' %}">✖️ Reset</a>
   {% endif %}
 {% endblock %}
 
 {% block main %}
-  <h2>Results for {{ worker.turk_id }}</h2>
+  <h2>Results</h2>
   {% if worker.completed_all_tests %}
-    <p class='mt-3'><strong>🎉 Congratulations!</strong> You've completed all the required tests. We will be in touch with you soon.</p>
+    <p class='mt-3'><strong>🎉 Congratulations!</strong> You've completed all the required tests. Copy and paste the following ID and provide it to Amazon as proof of completion.</p>
+
+    <input type="text" id="turk_id" class="form-control" value={{ worker.id }} readonly onClick="this.select();">
   {% endif %}
+
+  <h2 class="mt-4">Scores</h2>
   <table class="table">
       <thead>
         <tr>
