@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.translation import get_language_from_request
 from .models import Test, Result, Worker
 from .forms import RegisterForm, ResultForm
 
@@ -28,11 +29,23 @@ def index(request, register_form=None):
 
     return render(request, 'cognitive_skills/index.html', context)
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def register(request):
     if request.method == 'POST':
         worker_form = RegisterForm(request.POST)
         if worker_form.is_valid():
             worker = worker_form.save()
+            worker.ip = get_client_ip(request)
+            worker.user_agent = request.META.get('HTTP_USER_AGENT')
+            worker.locale = get_language_from_request(request)
+            worker.save()
             request.session['worker_id'] = str(worker.id)
             first_test = Test.objects.all().first()
             return HttpResponseRedirect(reverse('cognitive_skills:test', args=[first_test.slug]))

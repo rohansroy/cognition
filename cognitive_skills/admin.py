@@ -40,8 +40,9 @@ class ResultAdmin(admin.ModelAdmin):
 
 class WorkerAdmin(admin.ModelAdmin):
     search_fields = ('id',)
-    list_display = ('id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect',)
+    list_display = ('id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect')
     actions = ('export_as_csv',)
+    readonly_fields = ('location', 'time_zone')
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta

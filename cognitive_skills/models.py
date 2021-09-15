@@ -2,6 +2,8 @@ import uuid
 from functools import reduce
 from django.db import models
 
+from django.contrib.gis.geoip2 import GeoIP2
+
 from localflavor.us.models import USStateField
 
 # Create your models here.
@@ -92,6 +94,34 @@ class Worker(models.Model):
                                         ('retired', 'Retired'),
                                         ('disabled', 'Unable to work'),
                                     ])
+    
+    ip = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.CharField(max_length=255, blank=True, null=True)
+    locale = models.CharField(max_length=32, blank=True, null=True)
+
+    @property
+    def location(self):
+        if self.ip:
+            g = GeoIP2()
+            try:
+                country = g.country(self.ip).get('country_name') or '<No Country>'
+                city = g.city(self.ip).get('city') or '<No City>'
+                state = g.city(self.ip).get('region') or '<No State>'
+                zip = g.city(self.ip).get('postal_code') or '<No Zip>'
+            except:
+                return "Error"
+            return ', '.join([city, state, zip, country])
+        else:
+            return "None"
+    
+    @property
+    def time_zone(self):
+        if self.ip:
+            g = GeoIP2()
+            time_zone = g.city(self.ip).get('time_zone') or '<No Timezone>'
+            return time_zone
+        else:
+            return "None"
 
     def __str__(self):
         return str(self.id)
