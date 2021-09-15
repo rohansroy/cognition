@@ -9,11 +9,13 @@ from localflavor.us.models import USStateField
 # Create your models here.
 class Test(models.Model):
     class Meta:
-        ordering = ('name',)
+        ordering = ('created_at',)
     name = models.CharField(max_length=50)
     slug = models.SlugField()
     introduction = models.TextField()
     description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     # Add Sort Order Field
 
     def __str__(self):
@@ -25,6 +27,10 @@ class Worker(models.Model):
             primary_key = True,
             default = uuid.uuid4,
             editable = False)
+    class Meta:
+        ordering = ('created_at',)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     turk_id = models.CharField(max_length=255, blank=True, null=True)
     age = models.PositiveSmallIntegerField(help_text='You must be 18+ to take this survey')
     gender = models.CharField(max_length=255, help_text='To which gender identity do you most identify?', choices = [
@@ -156,6 +162,10 @@ class Worker(models.Model):
 
 
 class Result(models.Model):
+    class Meta:
+        ordering = ('created_at',)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE, related_name='results')
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='results')
     correct = models.PositiveIntegerField()

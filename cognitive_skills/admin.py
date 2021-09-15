@@ -7,7 +7,7 @@ from django.http import HttpResponse
 class TestAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ('slug',)
+            return ('slug', 'created_at', 'updated_at',)
         return []
 
     def get_prepopulated_fields(self, request, obj=None):
@@ -19,6 +19,7 @@ class ResultAdmin(admin.ModelAdmin):
     search_fields = ('worker__id',)
     actions = ("export_as_csv",)
     list_display = ('worker', 'test', 'correct', 'incorrect', 'total', 'pctCorrect',)
+    readonly_fields = ('created_at', 'updated_at', )
     list_filter = ('test', )
 
     def export_as_csv(self, request, queryset):
@@ -40,9 +41,9 @@ class ResultAdmin(admin.ModelAdmin):
 
 class WorkerAdmin(admin.ModelAdmin):
     search_fields = ('id',)
-    list_display = ('id', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect')
+    list_display = ('id', 'created_at', 'updated_at', 'completed_all_tests', 'tests_completed', 'total_correct_answers', 'total_answers', 'pctCorrect')
     actions = ('export_as_csv',)
-    readonly_fields = ('location', 'time_zone')
+    readonly_fields = ('created_at', 'updated_at', 'location', 'time_zone')
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
