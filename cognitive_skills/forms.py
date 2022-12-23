@@ -7,7 +7,7 @@ from .models import Result, Worker
 class RegisterForm(forms.ModelForm):
     class Meta:
         model = Worker
-        fields = ['age', 'city', 'state', 'gender', 'ethnicity', 'education', 'marital_status', 'orientation', 'employment']
+        fields = ['age', 'state', 'gender', 'ethnicity', 'education', 'marital_status', 'orientation', 'employment']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['age'].widget.attrs.update({'min': 18, 'max': 120})

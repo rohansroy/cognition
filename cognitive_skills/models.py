@@ -41,7 +41,7 @@ class Worker(models.Model):
                                     ('gender_nonconforming', 'Gender Variant/Non-Conforming'),
                                     ('prefer_not_to_answer', 'Prefer Not To Answer'),
                                 ])
-    city = models.CharField(max_length=255)
+    city = models.CharField(max_length=255, blank=True, null=True)
     state = USStateField()
     ethnicity = models.CharField(max_length=255, help_text="Which of the following ethnic group(s) do you consider yourself a member?",
                                 choices = [
