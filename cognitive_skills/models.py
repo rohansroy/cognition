@@ -105,6 +105,8 @@ class Worker(models.Model):
                                         ('disabled', 'Unable to work'),
                                     ])
     
+    preliminary_diagnosis = models.CharField(max_length=255, help_text="Leave blank if unknown", null=True, blank=True)
+    
     ip = models.GenericIPAddressField(blank=True, null=True)
     user_agent = models.CharField(max_length=255, blank=True, null=True)
     locale = models.CharField(max_length=32, blank=True, null=True)
