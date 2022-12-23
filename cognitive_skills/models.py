@@ -66,7 +66,11 @@ class Worker(models.Model):
                                     ('masters_degree', 'Master’s Degree'),
                                     ('some_postgraduate', 'Some Postgraduate Work, No Degree'),
                                     ('postgraduate', 'Ph.D., J.D., M.D., or Other Professional Degree'),
-                                ])
+                                ],
+                                null=True, blank=True)
+
+    years_of_education = models.CharField(max_length=255, help_text="How many years of education have you received?",
+                                choices = [(i, i) for i in range(21)])
     
     marital_status = models.CharField(max_length=255, help_text="What is your marital status?",
                                 choices = [
