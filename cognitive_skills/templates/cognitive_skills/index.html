@@ -12,7 +12,6 @@
     <p>Choose a test from the list on the left.</p>
   {% else %}
     <h3>Register</h3>
-    <p>Register below to begin the survey. Once you have completed the survey, you will receive a code to prove completion of the survey and receive credit.</p>
       <form method="post" action="{% url 'cognitive_skills:register' %}" class="mt-2">
         
         {% csrf_token %}
