@@ -47,7 +47,7 @@ class WorkerAdmin(admin.ModelAdmin):
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
-        field_names = ['id', 'age', 'gender', 'city', 'state', 'ethnicity', 'education', 'marital_status', 'orientation', 'employment']
+        field_names = ['id', 'age', 'gender', 'city', 'state', 'ethnicity', 'education', 'years_of_education', 'marital_status', 'orientation', 'employment', 'preliminary_diagnosis']
         result_names = [
             field.name for field in Result._meta.get_fields() if field.name in ['test', 'correct', 'total']
         ]
