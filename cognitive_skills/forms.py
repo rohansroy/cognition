@@ -11,6 +11,7 @@ class RegisterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['age'].widget.attrs.update({'min': 18, 'max': 120})
+        self.fields['years_of_education'].widget.attrs.update({'min': 0, 'max': 21})
 
     captcha = ReCaptchaField()
 

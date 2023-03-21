@@ -69,8 +69,7 @@ class Worker(models.Model):
                                 ],
                                 null=True, blank=True)
 
-    years_of_education = models.CharField(max_length=255, help_text="How many years of education have you received?",
-                                choices = [(str(i), str(i)) for i in range(21)])
+    years_of_education = models.PositiveSmallIntegerField(help_text='How many years of education have you received?')
     
     marital_status = models.CharField(max_length=255, help_text="What is your marital status?",
                                 choices = [
