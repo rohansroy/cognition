@@ -134,3 +134,6 @@ RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY', default='6LcTABscAAAAACPI-
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip2')
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
