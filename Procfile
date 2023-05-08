@@ -1,2 +1,2 @@
 # release: python manage.py migrate
-web: gunicorn cognition.wsgi --log-file -
+web: python manage.py collectstatic --noinput; gunicorn cognition.wsgi --log-file -
